@@ -7,4 +7,4 @@ The IntelliConnect Examples provide starter kits that allow Innov8 Digital Media
 The current examples provide code and tutorials on how to set up:
 
 - Raspberry Pi 4
-    - [Temperature & Humidity](RPI/Temperature-Humidity/README.md)
+    - [Temperature & Humidity](RPI4/Temperature-Humidity/README.md)
