@@ -158,3 +158,10 @@ Next you need to train the ISA model. To do this click on the `Train` button and
 
 Finally you need to deploy the new ISA model. To do this click on the `Deploy` button and wait for it to complete. Once the new deployment has completed you will be notified on screen and you will receive an email to your TMS contact email.
 
+![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/query-isa.jpg)
+
+With your Intelligent Systems Assistant now aware of your new device, you can now query the status and values from the sensor by speaking to ISA. Examples of queries are:
+
+- Is the `Device Name` in the `Zone` online?
+- What is the `Measurement` in the `Office`?
+
