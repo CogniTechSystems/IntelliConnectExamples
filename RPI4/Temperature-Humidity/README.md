@@ -162,6 +162,6 @@ Finally you need to deploy the new ISA model. To do this click on the `Deploy` b
 
 With your Intelligent Systems Assistant now aware of your new device, you can now query the status and values from the sensor by speaking to ISA. Examples of queries are:
 
-- Is the `Device Name` in the `Zone` online?
-- What is the `Measurement` in the `Zone`?
+- Is the `Device Name` in the `Zone` online? IE: **Is the environment monitor in the office online?**
+- What is the `Measurement` in the `Zone`? IE: **What is the temperature in the office?**
 
