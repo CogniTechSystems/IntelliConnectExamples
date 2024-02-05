@@ -69,7 +69,7 @@ Enter or select the following:
 
 Before you complete the device enrollment process you need to upload your device security certificate. There are two ways to do this, the first is by self-signing a certificate, and the second is by purchasing an X.509 CA certificate. Self-signed certificates are fine when testing in a non-public environment, but should absolutely not be used in production or public environments. If you are ready to deploy in production you should purchase an X.509 CA certificate that you can use to sign your asset certificates.
 
-In both cases the the CA certificate
+In both cases the common name (CN) needs to be set to the registration ID you are using to enroll your device.
 
 #### Self Signed Certificate
 
@@ -141,4 +141,20 @@ Now its time to run your device. Once you run the device the system will automat
 ![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/console.jpg)
 
 You will notice the `Provisioning` stat on the asset page will change from `Enrolled` to `Registered` and you will start to see real-time data coming in from your device.
+
+# Training Your Intelligent Systems Assistant
+
+Now you need to train your Intelligent Systems Assistant so that you can query the device in natural language using AI. When you created the device training data was automatically created.
+
+![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/isa-data.jpg)
+
+Head over to the `ISA` control panel and head to `Model` then click on `Create New` in the `Create ISA Dataset` section. Once the new dataset has been generated you will be notified on screen and you will receive an email to your TMS contact email.
+
+![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/isa-model-trained.jpg)
+
+Next you need to train the ISA model. To do this click on the `Train` button and wait for it to complete. Once the new training has completed you will be notified on screen and you will receive an email to your TMS contact email.
+
+![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/isa-model-deployed.jpg)
+
+Finally you need to deploy the new ISA model. To do this click on the `Deploy` button and wait for it to complete. Once the new deployment has completed you will be notified on screen and you will receive an email to your TMS contact email.
 
