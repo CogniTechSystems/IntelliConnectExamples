@@ -1,0 +1,12 @@
+{
+    "host": "global.azure-devices-provisioning.net",
+    "id_scope": "",
+    "device_id": "",
+    "registration_id": "",
+    "ipinfo": "",
+    "cert" : {
+        "cert_file": "./certs/device-cert.pem",
+        "key_file": "./certs/device-key.pem",
+        "pass_phrase": ""
+    }
+}
