@@ -1,0 +1,21 @@
+{
+    "host": "global.azure-devices-provisioning.net",
+    "id_scope": "",
+    "device_id": "",
+    "registration_id": "",
+    "ipinfo": "",
+    "cert": {
+        "cert_file": "./certs/device-cert.pem",
+        "key_file": "./certs/device-key.pem",
+        "pass_phrase": ""
+    },
+    "openvino": {
+        "detection": "model/face-detection-retail-0004.xml",
+        "reidentification": "model/face-reidentification-retail-0095.xml",
+        "landmarks": "model/landmarks-regression-retail-0009.xml",
+        "runas": "MYRIAD",
+        "known": "model/data/known/",
+        "test": "model/data/test/",
+        "threshold": 1.20
+    }
+}
