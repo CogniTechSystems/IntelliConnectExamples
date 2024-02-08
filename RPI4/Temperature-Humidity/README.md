@@ -48,6 +48,35 @@ sh install.sh
 
 You will also need an API key from [IPInfo.io](https://ipinfo.io/).
 
+# Data Structure
+
+IoT devices that connect to IntelliConnect must have a uniform data structure in a format that IntelliConnect can read. Below is the data format for a device that has sensors:
+
+```
+{
+    "_id": "IntelliConnect Device ID",
+    "Data": [{
+        "Sensor": "TempHumidity",
+        "Data": {
+            "Temperature": "The Temperature",
+            "Humidity": "The Humidity"
+        }
+    }],
+    "State": {
+        "CPU": "CPU Usage Percentage",
+        "Memory": "Memory Usage Percentage",
+        "Diskspace": "Diskspace Usage Percentage",
+        "CPUTemp": "CPU Temperature",
+        "IP": "Device IP",
+        "MAC": "Device MAC"
+    },
+    "Location": {
+        "Longitude": "Longitude",
+        "Latitude": "Latitude"
+    }
+}
+```
+
 # IntelliConnect Setup
 
 In your business TMS head over to the IntelliConnect section and click on `Assets` then click on the `Actions` tab and select `Create Individual Asset`.
@@ -100,7 +129,7 @@ IntelliConnectExamples/RPI4/Temperature-Humidity/certs
 
 Now you can complete the enrollment of your new device. This step will create an enrollment for your device and once it starts running it will automatically be registered to the IntelliConnect network and begin publishing sensor data.
 
-The system will also create training data for your Intelligent Systems Assistant (ISA) that will allow you to query the state of the device and its sensors.
+The system will also create training data for your Intelligent Systems Assistant (ISA) that will allow you to query the state of the device and its sensors. This is a simple example of how businesses can easily prototype IoT devices, however, any IoT device that is programmable can be connected to IntelliConnect.
 
 ![IntelliConnect RPI 4 Temperature & Humidity Example](assets/img/asset.jpg)
 

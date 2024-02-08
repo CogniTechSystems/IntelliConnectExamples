@@ -1,20 +1,26 @@
-# IntelliConnect RPI Facial Recognition Example
+# IntelliConnect RPI 4 LED Example
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/rpi4-facial-recognition.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/rpi4-led.jpg)
 
-This IntelliConnect example takes you through creating a facial recognition device with the Intel Neural Compute Stick 2 and Raspberry Pi 4. This is a simple example of how businesses can easily prototype IoT devices, however, any IoT device that is programmable can be connected to IntelliConnect.
+This IntelliConnect example takes you through creating a IoT connected LED device with the Raspberry Pi 4. This is a simple example of how businesses can easily prototype IoT devices, however, any IoT device that is programmable can be connected to IntelliConnect.
 
 # Hardware Requirements
 
 - [Raspberry Pi 4](https://thepihut.com/products/raspberry-pi-4-model-b) (Other models should work fine)
-- [Intel Neural Compute Stick 2](https://www.intel.com/content/www/us/en/developer/articles/tool/neural-compute-stick.html)
-- USB camera
+- [Breadboard](https://thepihut.com/products/full-sized-breadboard)
+- Generic LED
+- [Wires](https://thepihut.com/products/thepihuts-jumper-bumper-pack-120pcs-dupont-wire)
 
 # Hardware Setup
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/intel-ncs2-rpi4.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/wiring.jpg)
 
-The hardware setup is very simple, plug your NCS2 and USB camera to your Raspberry Pi and you are good to go.
+To set up your circuit follow the diagram above. Below you will find a pin map.
+
+| RPI    | LED |
+| -------- | ------- |
+| GPIO 17  | Long leg (Via 330ohm resistor)    |
+| Ground    | Short leg    |
 
 # Software Setup
 
@@ -26,7 +32,7 @@ First install the software listed above. Next to install the program software, n
 
 ```
 git clone https://github.com/Innov8DigitalMediaTech/IntelliConnectExamples
-cd IntelliConnectExamples/RPI4/Facial-Recognition
+cd IntelliConnectExamples/RPI4/LED
 sh install.sh
 ```
 
@@ -34,15 +40,15 @@ You will also need an API key from [IPInfo.io](https://ipinfo.io/).
 
 # Data Structure
 
-IoT devices that connect to IntelliConnect must have a uniform data structure in a format that IntelliConnect can read. Below is the data format for a device that has sensors:
+IoT devices that connect to IntelliConnect must have a uniform data structure in a format that IntelliConnect can read. Below is the data format for a device that has actuators:
 
 ```
 {
     "_id": "IntelliConnect Device ID",
     "Data": [{
-        "Sensor": "Camera",
+        "Actuator": "LED",
         "Data": {
-            "Detected": "The ID Of The User Detected or 0"
+            "State": "State (ON or OFF)"
         }
     }],
     "State": {
@@ -60,17 +66,11 @@ IoT devices that connect to IntelliConnect must have a uniform data structure in
 }
 ```
 
-# Data Set Up
-
-You should add a single image for each user that has access to your TMS system. The image should be a front on shot and clear, and the file name should be the user's TMS ID. IE, if you have a staff member called `Joe Blogs`, and their user ID is `1`, then the file you use should be `1.jpg`.
-
-You should place your images of known people in the `model/data/known` directory. You can also add test images to the `model/data/test` directory. The images you add to the test directory should be different from the ones in the known directory.
-
 # IntelliConnect Setup
 
 In your business TMS head over to the IntelliConnect section and click on `Assets` then click on the `Actions` tab and select `Create Individual Asset`.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/device-enrollment.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/device-enrollment.jpg)
 
 ## Individual Device Enrollment
 
@@ -78,7 +78,7 @@ Enter or select the following:
 
 - **Asset Name** - *Your new device name (Must be unique)*
 - **Asset Type** - *Select Device*
-- **Asset Category** - *Select SecurityCamera*
+- **Asset Category** - *Select LED*
 - **Asset Site Location** - *Select the IntelliConnect Site this device will be installed in*
 - **Asset Site Zone** - *Select the IntelliConnect Zone this device will be installed in*
 - **Regsitration ID** - *You will need this value for your certificate*
@@ -97,12 +97,11 @@ In both cases the common name (CN) needs to be set to the registration ID you ar
 
 To create a certificate on Windows you will need to have the required software listed above installed and then open a `GitBash` prompt.
 
-Navigate to the directory you want to create the certificates in and run the following command, replacing `Your-Registration-ID` with the value found in the `Registration ID` field on the `Create IntelliConnect Asset` page. In the screen shot above you will see for this example the registration ID is `66fceeb0-2d38-4b5c-9690-0398b2241627` however this will change for you each time you create a new device.
+Navigate to the directory you want to create the certificates in and run the following command, replacing `Your-Registration-ID` with the value found in the `Registration ID` field on the `Create IntelliConnect Asset` page. In the screen shot above you will see for this example the registration ID is `beb0b639-186d-4847-9d10-0be8d9f5e180` however this will change for you each time you create a new device.
 
 ```
 winpty openssl req -outform PEM -x509 -sha256 -newkey rsa:4096 -keyout device-key.pem -out device-cert.pem -days 30 -extensions usr_cert -addext extendedKeyUsage=clientAuth -subj "//CN=Your-Registration-ID"
 ```
-
 You will be asked to enter a PEM password. In development and test environments you can use any value for you this but it is good to get into the habbit of using secure passwords so use a secure password here and make sure you keep it safe as you will need it later.
 
 You should now have two files:
@@ -113,15 +112,15 @@ You should now have two files:
 You need to copy these files to to the certs directory in your project in the following location:
 
 ```
-IntelliConnectExamples/RPI4/Facial-Recognition/certs
+IntelliConnectExamples/RPI4/LED/certs
 ```
 ### Complete The Enrollment
 
-Now you can complete the enrollment of your new device. This step will create an enrollment for your device and once it starts running it will automatically be registered to the IntelliConnect network and begin publishing sensor data.
+Now you can complete the enrollment of your new device. This step will create an enrollment for your device and once it starts running it will automatically be registered to the IntelliConnect network and will sit waiting for commands to be sent to it from TMS.
 
-The system will also create training data for your Intelligent Systems Assistant (ISA) that will allow you to query the state of the device and its sensors.
+The system will also create training data for your Intelligent Systems Assistant (ISA) that will allow you to query the state of the device and the LED, and send commands to turn it on or off.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/asset.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/asset.jpg)
 
 To complete the enrollment, ensure you have filled out all of the information and uploaded your certificate and click `Create`. Once the process completes you will redirected to the asset page.
 
@@ -136,19 +135,10 @@ In the `config/configs.json` file you will find the required configuration for y
     "device_id": "",
     "registration_id": "",
     "ipinfo": "",
-    "cert": {
+    "cert" : {
         "cert_file": "./certs/device-cert.pem",
         "key_file": "./certs/device-key.pem",
         "pass_phrase": ""
-    },
-    "openvino": {
-        "detection": "model/face-detection-retail-0004.xml",
-        "reidentification": "model/face-reidentification-retail-0095.xml",
-        "landmarks": "model/landmarks-regression-retail-0009.xml",
-        "runas": "MYRIAD",
-        "known": "model/data/known/",
-        "test": "model/data/test/",
-        "threshold": 1.20
     }
 }
 ```
@@ -164,60 +154,48 @@ Once you have made the above changes upload the file to the same location on you
 
 # Run Your Device
 
-Now its time to run your device. Once you run the device the system will automatically register your device and connect it to the IntelliConnect platform, you will see the program print out `Connected to IntelliConnect IoT` before beginning to see the data that is being sent to IntelliConnect.
+Now its time to run your device. In `main.py` you will see the following:
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/console.jpg)
+```
+core.run("test")
+#core.run()
+```
+
+By default the system will run in test mode which will loop turing the LED on and off. When you are ready to send commands to the device you should comment out `core.run("test")` and uncomment `#core.run()`. Once you run the device the system will automatically register your device and connect it to the IntelliConnect platform, you will see the program print out `Connected to IntelliConnect IoT` .
+
+![IntelliConnect RPI 4 LED Example](assets/img/console.jpg)
 
 You will notice the `Provisioning` stat on the asset page will change from `Enrolled` to `Registered` and you will start to see real-time data coming in from your device.
 
-# View The Stream
+# Control The LED
 
-The program will start a stream on your local network that can be accessed via a browser. For production environments you would need to portforward from your router to the port on your Raspberry Pi if you would like to view this stream outside of your network. We will publish a tutorial on how to do that in the future.
+On the top right of the asset page in TMS you will see the LED actuator listed in the `Asset Actuators` box. You click `ON` or `OFF` to send a command to the device which will turn the LED on or off instantly, no matter where in the world the device is.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/facial-recognition-stream.jpg)
-
-If you are on the same network that the Raspberry Pi is on, you can access the stream with the following URL:
-
-```
-http://YourIP:8383/?stream.mjpg
-```
+You can also tell ISA, the Intelligent Systems Assistant to do it for you, see below for more information.
 
 # Training Your Intelligent Systems Assistant
 
 Now you need to train your Intelligent Systems Assistant so that you can query the device in natural language using AI. When you created the device training data was automatically created.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/isa-data.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/isa-data.jpg)
 
 Head over to the `ISA` control panel and head to `Model` then click on `Create New` in the `Create ISA Dataset` section. Once the new dataset has been generated you will be notified on screen and you will receive an email to your TMS contact email.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/isa-model-trained.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/isa-model-trained.jpg)
 
 Next you need to train the ISA model. To do this click on the `Train` button and wait for it to complete. Once the new training has completed you will be notified on screen and you will receive an email to your TMS contact email.
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/isa-model-deployed.jpg)
+![IntelliConnect RPI 4 LED Example](assets/img/isa-model-deployed.jpg)
 
 Finally you need to deploy the new ISA model. To do this click on the `Deploy` button and wait for it to complete. Once the new deployment has completed you will be notified on screen and you will receive an email to your TMS contact email.
 
-# Querying The User's Location
+![IntelliConnect RPI 4 LED Example](assets/img/query-isa.jpg)
 
-![IntelliConnect RPI Facial Recognition Example](assets/img/query-isa.jpg)
+With your Intelligent Systems Assistant now aware of your new device, you can now query the status of the device and LED, and turn the LED on and off by speaking to ISA. Examples of queries are:
 
-When the AI detects one of the TMS users, it will send the user ID to IntelliConnect, which will update the user's TMS account with the zone that they are in and the time they were seen in it.
-
-Through the use of the Intelligent Systems Assistant (ISA), you can ask `Where is Joe Blogs`, and ISA will respond with the zone they were last seen in and what time, if they were seen within the last hour.
-
-- Where is `User Name`?
-- Have you seen `User Name`?
-
-It is likely that the speech recognition could get confused with the spelling of names, in some cases it may best to type the query into chat rather than speak.
-
-# Future Features
-
-Future features of this system include:
-
-- The ability to add miss spellings of the user's name to the account to increase accuracy of identifications.
-
-- The ability to specifiy which zones user's have access to, and rules that trigger if they are located in an out of bounds zone.
+- Turn the `Actuator Name` in the `Zone` off. IE: **Turn the LED in the office off**
+- Is the `Device Name` in the `Zone` online? IE: **Is the Simple LED Device in the office online?**
+- What is the `Actuator` in the `Zone` on? IE: **Is the LED in the office on?**
 
 # More About IntelliConnect
 
